@@ -48,4 +48,35 @@ test.describe('Backend tests', () => {
     });
     expect(response.ok()).toBeTruthy();
   });
+
+  test('Test case 02 - Skapa ny kund API', async ({ request }) => {
+    const loginResponse = await request.post('http://localhost:3000/api/login', {
+      data: {
+        "username": process.env.TEST_USERNAME,
+        "password": process.env.TEST_PASSWORD
+      }
+    });
+  
+    const { token } = await loginResponse.json();
+  
+    
+    const payload = {
+      name: 'Gunnar Gren', 
+      email: 'gunnar.gren@example.com', 
+    };
+  
+    const response = await request.post('http://localhost:3000/api/client/new', {
+      headers: {
+        'Content-Type': 'application/json',
+        'X-user-auth': JSON.stringify({ username: 'tester01', token }),
+      },
+      data: JSON.stringify(payload), 
+    });
+  
+    
+    expect(response.ok()).toBeTruthy();
+    const client = await response.json();
+    expect(client.name).toBe(payload.name);
+    expect(client.email).toBe(payload.email);
+  });
 })
