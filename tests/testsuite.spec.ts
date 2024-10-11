@@ -34,3 +34,18 @@ test('Test case 02 - Skapa ny kund', async ({ page }) => {
     await expect(page.locator('h3:has-text("GunnarGren")')).toBeVisible();
   });
 })
+
+//BACKEND
+
+
+test.describe('Backend tests', () => {
+  test('Test case 01 - Logga in API', async ({ request }) => {
+    const response = await request.post('http://localhost:3000/api/login', {
+      data: {
+        "username": process.env.TEST_USERNAME,
+        "password": process.env.TEST_PASSWORD
+      }
+    });
+    expect(response.ok()).toBeTruthy();
+  });
+})
